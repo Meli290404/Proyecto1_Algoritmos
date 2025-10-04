@@ -1,66 +1,52 @@
-from tarea1.diccionario import Diccionario
+from src.tarea1.diccionario import Diccionario
 
 class Array:
-    def __init__(self, valor_inicial=None, tamaño = None):
+    def __init__(self, valor_inicial=None, tamaño=None):
         if not isinstance(tamaño, int) or tamaño < 0:
             raise ValueError("El tamaño debe ser un entero positivo.")
-        if not isinstance(valor_inicial, list):
-            self.__lista = [valor_inicial] * tamaño
-            self.__tamaño = tamaño
-        else:
-            self.__lista = valor_inicial
-            self.__tamaño = len(valor_inicial)        
+        self.__lista = [valor_inicial] * tamaño
+        self.__tamaño = tamaño
 
     def __getitem__(self, índice):
-        if not (0 <= índice < self.__tamaño):
-            raise IndexError("Índice de arreglo fuera de los límites.")
         return self.__lista[índice]
 
-    def __setitem__(self, índice, value):
-        if not (0 <= índice < self.__tamaño):
-            raise IndexError("Índice de arreglo fuera de los límites")
-        self.__lista[índice] = value
+    def __setitem__(self, índice, valor):
+        self.__lista[índice] = valor
 
     def __len__(self):
         return self.__tamaño
 
-    def __repr__(self):
-        return f"Array({self.__lista})"
-    
-    def __str__(self) -> str:
-        return str(self.__lista)
+    def get_lista(self):
+        return self.__lista
 
-class ListaOrdenadaEstática(Diccionario):
-    def __init__(self, tamaño):
-        self.__arreglo: Array = Array(valor_inicial=0, tamaño=tamaño)
-        self.__último: int | None = None
 
-    def __len__(self):
-        if self.__último is None:
-            return 0
-        else:
-            return self.__último + 1
-    
-    def __getitem__(self, índice):
-        pass
+class ListaOrdenadaEstatica(Diccionario):
+    def __init__(self, capacidad=1000):
+        self.__datos = []
+        self.__capacidad = capacidad
 
-    def inserte(self, elemento):
-        pass
+    def inserte(self, elemento: str):
+        if len(self.__datos) >= self.__capacidad:
+            raise OverflowError("Capacidad máxima alcanzada.")
+        self.__datos.append(elemento)
+        self.__datos.sort()
 
-    def borre(self, elemento):
-        pass
+    def borre(self, elemento: str):
+        if elemento in self.__datos:
+            self.__datos.remove(elemento)
 
     def limpie(self):
-        pass
+        self.__datos.clear()
 
-    def miembro(self, elemento):
-        pass
+    def miembro(self, elemento: str) -> bool:
+        return elemento in self.__datos
 
     def imprima(self):
-        print(self)
+        print(" -> ".join(self.__datos))
+
+    def done(self):
+        self.__datos = []
+        self.__capacidad = 0
 
     def __str__(self) -> str:
-        return str(self.__arreglo)
-    
-    def __del__(self):
-        pass
+        return "[" + ", ".join(self.__datos) + "]"

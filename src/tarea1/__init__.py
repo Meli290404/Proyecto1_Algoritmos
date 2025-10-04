@@ -4,7 +4,7 @@ Programa principal para utilizar el modelo Diccionario.
 
 Programado por Braulio José Solano Rojas.
 """
-
+"""
 from __future__ import annotations
 
 import sys
@@ -14,10 +14,16 @@ from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
+"""
 
-from tarea1.diccionario import Diccionario
-from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
-from tarea1.listaordenadaestatica import ListaOrdenadaEstática
+from src.tarea1.diccionario import Diccionario
+from src.tarea1.listaordenadadinamica import ListaOrdenadaDinamica
+from src.tarea1.listaordenadaestatica import ListaOrdenadaEstatica
+from src.tarea1.tablahashabierta import TablaHashAbierta
+from src.tarea1.abbpunteros import ABBPunteros
+from src.tarea1.abbvectorheap import ABBVectorHeap
+from src.tarea1.triepunteros import TriePunteros
+from src.tarea1.triearreglos import TrieArreglos
 
 console = Console()
 
@@ -215,9 +221,9 @@ def menu_clase() -> Diccionario:
             opcion = leer_tecla("1234567")
             match opcion:
                 case "1":
-                    return ListaOrdenadaDinámica()
+                    return ListaOrdenadaDinamica()
                 case "2":
-                    return ListaOrdenadaEstática(100)
+                    return ListaOrdenadaEstatica(100)
                 case "3":
                     pass
                 case "4":
