@@ -1,4 +1,4 @@
-from src.tarea1.diccionario import Diccionario
+from tarea1.diccionario import Diccionario
 
 class Array:
     def __init__(self, valor_inicial=None, tamaño=None):

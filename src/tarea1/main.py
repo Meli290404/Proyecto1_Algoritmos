@@ -1,6 +1,6 @@
-from src.tarea1.listaordenadadinamica import ListaOrdenadaDinamica
-from src.tarea1.listaordenadaestatica import ListaOrdenadaEstatica
-from src.tarea1.tablahashabierta import TablaHashAbierta
+from tarea1.listaordenadadinamica import ListaOrdenadaDinamica
+from tarea1.listaordenadaestatica import ListaOrdenadaEstatica
+from tarea1.tablahashabierta import TablaHashAbierta
 
 def seleccionar_diccionario():
     print("\nSeleccione la implementación:")
