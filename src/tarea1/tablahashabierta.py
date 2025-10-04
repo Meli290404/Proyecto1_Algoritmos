@@ -1,5 +1,9 @@
 from tarea1.diccionario import Diccionario
 import time
+import random
+import string
+from collections import Counter
+import math
 
 class TablaHashAbierta(Diccionario):
     def __init__(self, capacidad_inicial=10):
@@ -66,6 +70,61 @@ class TablaHashAbierta(Diccionario):
     def evaluar_hash(self):
         distribucion = [len(bucket) for bucket in self.__tabla]
         print("Distribución de elementos por bucket:", distribucion)
+    
+    def evaluar_uniformidad(self, n: int = 1000, imprimir: bool = True):
+        """
+        Genera n claves aleatorias (strings de 20 letras 'a'..'z'), las pasa por la
+        función hash y mide qué tan uniformemente se distribuyen en los buckets.
+
+        Retorna un diccionario con métricas básicas (ocupación por bucket, promedio,
+        mínimo, máximo y desviación estándar). Si imprimir=True, también muestra
+        un resumen por consola.
+        """
+        # 1) Generar n claves aleatorias con el mismo dominio que pide el enunciado (20 letras a..z)
+        claves = [
+            ''.join(random.choices(string.ascii_lowercase, k=20))
+            for _ in range(n)
+        ]
+
+        # 2) Calcular el índice (bucket) asignado por la función hash para cada clave
+        #    OJO: estamos dentro de la clase, así que podemos llamar a self.__hash_func(...) directamente
+        indices = [self.__hash_func(c) for c in claves]
+
+        # 3) Contar cuántas claves cayeron en cada bucket
+        conteo_por_indice = Counter(indices)
+
+        # 4) Convertir ese conteo a una lista de longitud = capacidad (para ver también los buckets vacíos)
+        ocupacion = [0] * self.__capacidad
+        for idx, cnt in conteo_por_indice.items():
+            ocupacion[idx] = cnt
+
+        # 5) Calcular métricas de uniformidad
+        promedio = n / self.__capacidad                     # esperado por bucket si fuera perfectamente uniforme
+        minimo = min(ocupacion)
+        maximo = max(ocupacion)
+        varianza = sum((x - promedio) ** 2 for x in ocupacion) / self.__capacidad
+        desv_estandar = math.sqrt(varianza)
+
+        if imprimir:
+            print(f"\n== Evaluación de uniformidad de hash ==")
+            print(f"Capacidad actual de la tabla: {self.__capacidad}")
+            print(f"Número de claves generadas: {n}")
+            print(f"Factor de carga simulado: {n/self.__capacidad:.2f}")
+            print(f"Ocupación por bucket (primeros 50 shown si muy larga):")
+            # Evitar imprimir miles de números si la capacidad es grande
+            vista = ocupacion[:50]
+            print(vista if len(ocupacion) > 50 else ocupacion)
+            print(f"Promedio esperado por bucket: {promedio:.2f}")
+            print(f"Mínimo: {minimo}, Máximo: {maximo}, Desv. estándar: {desv_estandar:.2f}\n")
+
+        # 6) Devolver los datos por si quieres graficar o analizarlos aparte
+        return {
+            "ocupacion_buckets": ocupacion,
+            "promedio": promedio,
+            "minimo": minimo,
+            "maximo": maximo,
+            "desviacion_estandar": desv_estandar
+        }
 
     def __str__(self) -> str:
         return str(self.__tabla)

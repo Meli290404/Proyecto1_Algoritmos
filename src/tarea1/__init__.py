@@ -200,6 +200,8 @@ def render_menu_diccionario() -> None:
         "[4] Imprimir el diccionario\n"
         "[5] Limpiar el diccionario\n"
         "[6] Salir\n\n"
+        "[7] Evaluar uniformidad de hash (solo Tabla Hash Abierta)\n"
+        "[8] Forzar rehash y medir tiempo (solo Tabla Hash Abierta)\n\n"
         "Digite una opción [_]"
     )
     panel_contenido(cuerpo)
@@ -226,7 +228,7 @@ def menu_clase() -> Diccionario:
                 case "2":
                     return ListaOrdenadaEstatica(100)
                 case "3":
-                    pass
+                    return TablaHashAbierta()
                 case "4":
                     pass
                 case "5":
@@ -244,7 +246,7 @@ def menu_diccionario(diccionario: Diccionario) -> None:
         while True:
             render_menu_diccionario()
             # leer una sola tecla válida y eco inmediato
-            opcion = leer_tecla("123456")
+            opcion = leer_tecla("12345678")
             # pequeña pausa visual como en Pascal
             # (no Delay, pero el eco ya se ve)
             match opcion:
@@ -261,6 +263,28 @@ def menu_diccionario(diccionario: Diccionario) -> None:
                 case "6":
                     console.clear()
                     break
+                case "7":
+                    # Solo si es tabla hash
+                    from tarea1.tablahashabierta import TablaHashAbierta
+                    if isinstance(diccionario, TablaHashAbierta):
+                        try:
+                            n = int(Prompt.ask("¿Cuántas claves aleatorias generar? [ej. 5000]", default="1000"))
+                        except ValueError:
+                            n = 1000
+                        diccionario.evaluar_uniformidad(n=n, imprimir=True)
+                        pausa()
+                    else:
+                        console.print("[yellow]Esta opción solo aplica para Tabla Hash Abierta.[/]")
+                        pausa()
+                case "8":
+                    from tarea1.tablahashabierta import TablaHashAbierta
+                    if isinstance(diccionario, TablaHashAbierta):
+                        t = diccionario.forzar_rehash_y_medir()
+                        console.print(f"[cyan]Rehash forzado tomó {t:.6f} segundos[/]")
+                        pausa()
+                    else:
+                        console.print("[yellow]Esta opción solo aplica para Tabla Hash Abierta.[/]")
+                        pausa()
     finally:
         del diccionario
 
