@@ -12,7 +12,7 @@ class TablaHashAbierta(Diccionario):
         self.__tamaño = 0
 
     def __hash_func(self, clave: str) -> int:
-        """Función hash simple (puedes mejorarla si quieres)."""
+        """Función hash simple"""
         return sum(ord(c) for c in clave) % self.__capacidad
 
     def inserte(self, elemento: str):
@@ -23,12 +23,15 @@ class TablaHashAbierta(Diccionario):
         if self.__tamaño / self.__capacidad > 0.7:  # factor de carga
             self.__rehash()
 
-    def borre(self, elemento: str):
+    def borre(self, elemento: str) -> bool:
+        """Elimina un elemento si existe. Retorna True si fue borrado."""
         indice = self.__hash_func(elemento)
         bucket = self.__tabla[indice]
         if elemento in bucket:
             bucket.remove(elemento)
             self.__tamaño -= 1
+            return True
+        return False
 
     def limpie(self):
         self.__tabla = [[] for _ in range(self.__capacidad)]
@@ -87,7 +90,6 @@ class TablaHashAbierta(Diccionario):
         ]
 
         # 2) Calcular el índice (bucket) asignado por la función hash para cada clave
-        #    OJO: estamos dentro de la clase, así que podemos llamar a self.__hash_func(...) directamente
         indices = [self.__hash_func(c) for c in claves]
 
         # 3) Contar cuántas claves cayeron en cada bucket
@@ -110,14 +112,14 @@ class TablaHashAbierta(Diccionario):
             print(f"Capacidad actual de la tabla: {self.__capacidad}")
             print(f"Número de claves generadas: {n}")
             print(f"Factor de carga simulado: {n/self.__capacidad:.2f}")
-            print(f"Ocupación por bucket (primeros 50 shown si muy larga):")
+            print(f"Ocupación por bucket (se muestran los primeros 50 si es muy larga):")
             # Evitar imprimir miles de números si la capacidad es grande
             vista = ocupacion[:50]
             print(vista if len(ocupacion) > 50 else ocupacion)
             print(f"Promedio esperado por bucket: {promedio:.2f}")
             print(f"Mínimo: {minimo}, Máximo: {maximo}, Desv. estándar: {desv_estandar:.2f}\n")
 
-        # 6) Devolver los datos por si quieres graficar o analizarlos aparte
+        # 6) Devolver los datos
         return {
             "ocupacion_buckets": ocupacion,
             "promedio": promedio,
@@ -127,4 +129,8 @@ class TablaHashAbierta(Diccionario):
         }
 
     def __str__(self) -> str:
-        return str(self.__tabla)
+        """Representación legible de la tabla hash."""
+        salida = ""
+        for i, bucket in enumerate(self.__tabla):
+            salida += f"{i}: {bucket}\n"
+        return salida
