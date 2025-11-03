@@ -25,6 +25,7 @@ from tarea1.abbpunteros import ABBPunteros
 from tarea1.abbvectorheap import ABBVectorHeap
 from tarea1.triepunteros import TriePunteros
 from tarea1.triearreglos import TrieArreglos
+from tarea1.analisis import ejecutar_analisis
 
 console = Console()
 
@@ -296,7 +297,7 @@ def main() -> None:
             diccionario = menu_clase()
             menu_diccionario(diccionario)
         case "2":
-            pass
+            ejecutar_analisis()
 
 
 if __name__ == "__main__":
